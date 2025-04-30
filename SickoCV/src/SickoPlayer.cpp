@@ -805,10 +805,6 @@ struct SickoPlayer : Module {
 			
 			for (int c=0; c < 16; c++)
 				samplePos[c] = 0;
-			playBuffer[LEFT][0].clear();
-			playBuffer[LEFT][1].clear();
-			playBuffer[RIGHT][0].clear();
-			playBuffer[RIGHT][1].clear();
 			displayBuff.clear();
 
 			/*
@@ -817,9 +813,22 @@ struct SickoPlayer : Module {
 			*/
 			if (!unlimitedRecording) {
 				if (tsc > recordingLimit / 2)
-					tsc = recordingLimit / 2;	// set memory allocation limit to 200Mb for samples (~18mins at 48.000khz MONO)
+					tsc = recordingLimit / 2;	// set memory allocation limit
 			}
 
+			// Shrink playBuffer to fit:
+			const auto numSamples = channels == 2 ? tsc : tsc * 2;
+			vector<float>().swap(playBuffer[LEFT][0]);
+			vector<float>().swap(playBuffer[LEFT][1]);
+			playBuffer[LEFT][0].reserve(numSamples);
+			playBuffer[LEFT][1].reserve(numSamples);
+
+			vector<float>().swap(playBuffer[RIGHT][0]);
+			vector<float>().swap(playBuffer[RIGHT][1]);
+			if (channels == 2) {
+				playBuffer[RIGHT][0].reserve(numSamples);
+				playBuffer[RIGHT][1].reserve(numSamples);
+			}
 
 			for (unsigned int i=0; i < tsc; i = i + c) {
 				playBuffer[LEFT][0].push_back(pSampleData[i] * 5);
