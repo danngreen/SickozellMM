@@ -831,7 +831,7 @@ struct SickoPlayer : Module {
 			}
 			totalSampleC = playBuffer[LEFT][0].size();
 			totalSamples = totalSampleC-1;
-//			drwav_free(pSampleData);
+			free(pSampleData);
 			for (unsigned int i = 1; i < totalSamples; i = i+2) {		// averaging oversampled vector
 				playBuffer[LEFT][0][i] = playBuffer[LEFT][0][i-1] * .5f + playBuffer[LEFT][0][i+1] * .5f;
 				if (channels == 2)
