@@ -820,6 +820,13 @@ struct SickoPlayer : Module {
 					tsc = recordingLimit / 2;	// set memory allocation limit to 200Mb for samples (~18mins at 48.000khz MONO)
 			}
 
+			// Free previous allocation for playBuffer and allocate what we need for this sample
+			vector<float>(tsc).swap(playBuffer[LEFT][0]);
+			vector<float>(tsc).swap(playBuffer[LEFT][1]);
+			if (channels == 2) {
+				vector<float>(tsc).swap(playBuffer[RIGHT][0]);
+				vector<float>(tsc).swap(playBuffer[RIGHT][1]);
+			}
 
 			for (unsigned int i=0; i < tsc; i = i + c) {
 				playBuffer[LEFT][0].push_back(pSampleData[i] * 5);
