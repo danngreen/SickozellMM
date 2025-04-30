@@ -106,7 +106,7 @@ struct SickoPlayer : Module {
 	const unsigned int minSamplesToLoad = 124;
 
 	vector<float> playBuffer[2][2];
-	vector<double> displayBuff;
+	vector<float> displayBuff;
 	int currentDisplay = 0;
 	float voctDisplay = 100.f;
 
@@ -353,6 +353,8 @@ struct SickoPlayer : Module {
 		playBuffer[0][1].resize(0);
 		playBuffer[1][0].resize(0);
 		playBuffer[1][1].resize(0);
+
+		displayBuff.reserve(240);
 	}
 
 	static float convertCVToSeconds(float cv) {		
@@ -853,8 +855,8 @@ struct SickoPlayer : Module {
 			prevKnobLoopStartPos = -1.f;
 			prevKnobLoopEndPos = 2.f;
 
-			vector<double>().swap(displayBuff);		// creating the display vector
-			for (int i = 0; i < floor(totalSampleC); i = i + floor(totalSampleC/240))
+			// creating the display vector
+			for (int i = 0; i < totalSampleC; i = i + floor(totalSampleC/240))
 				displayBuff.push_back(playBuffer[0][0][i]);
 
 			seconds = totalSampleC / sampleRate;
@@ -2489,10 +2491,10 @@ struct SickoPlayerDisplay : TransparentWidget {
 					for (unsigned int i = 0; i < module->displayBuff.size(); i++) {
 						float x, y;
 						x = (float)i / (module->displayBuff.size() - 1);
-						y = module->displayBuff[i] / 10.0 + 0.5;
+						y = module->displayBuff[i] / 10.f + 0.5f;
 						Vec p;
 						p.x = b.pos.x + b.size.x * x;
-						p.y = b.pos.y + b.size.y * (1.0 - y);
+						p.y = b.pos.y + b.size.y * (1.f - y);
 						if (i == 0)
 							nvgMoveTo(args.vg, p.x, p.y);
 						else
