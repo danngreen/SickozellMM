@@ -2841,7 +2841,14 @@ struct SickoPlayerWidget : ModuleWidget {
 			}
 		}));
 		
-		menu->addChild(createBoolPtrMenuItem("Anti-aliasing filter", "", &module->antiAlias));
+		// menu->addChild(createBoolPtrMenuItem("Anti-aliasing filter", "", &module->antiAlias));
+		menu->addChild(createCheckMenuItem("Anti-aliasing filter", "", 
+			[module](){ return module->antiAlias; },
+			[module](){
+				module->antiAlias = !module->antiAlias;
+				module->loadSample(module->storedPath);
+			}
+		));
 		menu->addChild(createBoolPtrMenuItem("Phase scan", "", &module->phaseScan));
 
 		menu->addChild(new MenuSeparator());
