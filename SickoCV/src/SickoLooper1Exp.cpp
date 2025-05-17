@@ -3239,11 +3239,9 @@ struct SickoLooper1Exp : Module {
 				extraRecording = false;
 
 			} else {
-				if (extraRecPos >= trackBuffer[LEFT].size()) {
-					trackBuffer[LEFT].push_back(0.f);
-					trackBuffer[LEFT].push_back(0.f);
-					trackBuffer[RIGHT].push_back(0.f);
-					trackBuffer[RIGHT].push_back(0.f);
+				if ((extraRecPos + 2) >= trackBuffer[LEFT].size()) {
+					trackBuffer[LEFT].resize(extraRecPos + 3, 0.f);
+					trackBuffer[RIGHT].resize(extraRecPos + 3, 0.f);
 				}
 
 				if (recFade) {
@@ -3282,6 +3280,8 @@ struct SickoLooper1Exp : Module {
 					trackBuffer[LEFT][extraRecPos+1] = (trackBuffer[LEFT][extraRecPos+2] + trackBuffer[LEFT][extraRecPos]) / 2;
 					trackBuffer[RIGHT][extraRecPos+1] = (trackBuffer[RIGHT][extraRecPos+2] + trackBuffer[RIGHT][extraRecPos]) / 2;
 					extraRecPos -= sampleCoeff;
+					if (extraRecPos >= sampleCoeff)
+					  extraRecPos -= sampleCoeff;
 				}
 			}
 		}
