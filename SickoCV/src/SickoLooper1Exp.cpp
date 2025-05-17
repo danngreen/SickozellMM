@@ -3159,6 +3159,7 @@ struct SickoLooper1Exp : Module {
 						currentOutput[RIGHT] += trackBuffer[RIGHT][extraPlayPos] * xFadeValue;
 						*/
 
+						if ((floor(extraPlayPos) + 2) < trackBuffer[LEFT].size() && floor(extraPlayPos) >= 1) {
 						double a1 = .5F * (trackBuffer[LEFT][floor(extraPlayPos)+1] - trackBuffer[LEFT][floor(extraPlayPos)-1]);
 						double a2 = trackBuffer[LEFT][floor(extraPlayPos)-1] - (2.5F * trackBuffer[LEFT][floor(extraPlayPos)]) + (2 * trackBuffer[LEFT][floor(extraPlayPos)+1]) - (.5F * trackBuffer[LEFT][floor(extraPlayPos)+2]);
 						double a3 = (.5F * (trackBuffer[LEFT][floor(extraPlayPos)+2] - trackBuffer[LEFT][floor(extraPlayPos)-1])) + (1.5F * (trackBuffer[LEFT][floor(extraPlayPos)] - trackBuffer[LEFT][floor(extraPlayPos)+1]));
@@ -3168,6 +3169,7 @@ struct SickoLooper1Exp : Module {
 						a2 = trackBuffer[RIGHT][floor(extraPlayPos)-1] - (2.5F * trackBuffer[RIGHT][floor(extraPlayPos)]) + (2 * trackBuffer[RIGHT][floor(extraPlayPos)+1]) - (.5F * trackBuffer[RIGHT][floor(extraPlayPos)+2]);
 						a3 = (.5F * (trackBuffer[RIGHT][floor(extraPlayPos)+2] - trackBuffer[RIGHT][floor(extraPlayPos)-1])) + (1.5F * (trackBuffer[RIGHT][floor(extraPlayPos)] - trackBuffer[RIGHT][floor(extraPlayPos)+1]));
 						currentOutput[RIGHT] += xFadeValue * ( (((((a3 * currSampleWeightXtra) + a2) * currSampleWeightXtra) + a1) * currSampleWeightXtra) + trackBuffer[RIGHT][floor(extraPlayPos)] );
+						} else printf("6: bound\n");
 						
 						if (extraPlayDirection == FORWARD)
 							extraPlayPos += distancePos;
@@ -3187,6 +3189,7 @@ struct SickoLooper1Exp : Module {
 					currentOutput[LEFT] += trackBuffer[LEFT][extraPlayPos];
 					currentOutput[RIGHT] += trackBuffer[RIGHT][extraPlayPos];
 					*/
+					if ((floor(extraPlayPos) + 2) < trackBuffer[LEFT].size() && floor(extraPlayPos) >= 1) {
 					double a1 = .5F * (trackBuffer[LEFT][floor(extraPlayPos)+1] - trackBuffer[LEFT][floor(extraPlayPos)-1]);
 					double a2 = trackBuffer[LEFT][floor(extraPlayPos)-1] - (2.5F * trackBuffer[LEFT][floor(extraPlayPos)]) + (2 * trackBuffer[LEFT][floor(extraPlayPos)+1]) - (.5F * trackBuffer[LEFT][floor(extraPlayPos)+2]);
 					double a3 = (.5F * (trackBuffer[LEFT][floor(extraPlayPos)+2] - trackBuffer[LEFT][floor(extraPlayPos)-1])) + (1.5F * (trackBuffer[LEFT][floor(extraPlayPos)] - trackBuffer[LEFT][floor(extraPlayPos)+1]));
@@ -3199,6 +3202,7 @@ struct SickoLooper1Exp : Module {
 
 					extraPlayPos += distancePos;
 					currSampleWeightXtra = extraPlayPos - floor(extraPlayPos);
+					} else printf("4: bounds\n");
 
 				} else {
 					if (!fadeTail) {
@@ -3210,6 +3214,7 @@ struct SickoLooper1Exp : Module {
 						//currentOutput[LEFT] += trackBuffer[LEFT][extraPlayPos] * fadeTailValue;
 						//currentOutput[RIGHT] += trackBuffer[RIGHT][extraPlayPos] * fadeTailValue;
 
+						if ((floor(extraPlayPos) + 2) < trackBuffer[LEFT].size() && floor(extraPlayPos) >= 1) {
 						double a1 = .5F * (trackBuffer[LEFT][floor(extraPlayPos)+1] - trackBuffer[LEFT][floor(extraPlayPos)-1]);
 						double a2 = trackBuffer[LEFT][floor(extraPlayPos)-1] - (2.5F * trackBuffer[LEFT][floor(extraPlayPos)]) + (2 * trackBuffer[LEFT][floor(extraPlayPos)+1]) - (.5F * trackBuffer[LEFT][floor(extraPlayPos)+2]);
 						double a3 = (.5F * (trackBuffer[LEFT][floor(extraPlayPos)+2] - trackBuffer[LEFT][floor(extraPlayPos)-1])) + (1.5F * (trackBuffer[LEFT][floor(extraPlayPos)] - trackBuffer[LEFT][floor(extraPlayPos)+1]));
@@ -3219,6 +3224,7 @@ struct SickoLooper1Exp : Module {
 						a2 = trackBuffer[RIGHT][floor(extraPlayPos)-1] - (2.5F * trackBuffer[RIGHT][floor(extraPlayPos)]) + (2 * trackBuffer[RIGHT][floor(extraPlayPos)+1]) - (.5F * trackBuffer[RIGHT][floor(extraPlayPos)+2]);
 						a3 = (.5F * (trackBuffer[RIGHT][floor(extraPlayPos)+2] - trackBuffer[RIGHT][floor(extraPlayPos)-1])) + (1.5F * (trackBuffer[RIGHT][floor(extraPlayPos)] - trackBuffer[RIGHT][floor(extraPlayPos)+1]));
 						currentOutput[RIGHT] += fadeTailValue * ( (((((a3 * currSampleWeightXtra) + a2) * currSampleWeightXtra) + a1) * currSampleWeightXtra) + trackBuffer[RIGHT][floor(extraPlayPos)] );
+						} else printf("5: bounds\n");
 						
 						extraPlayPos += distancePos;
 						currSampleWeightXtra = extraPlayPos - floor(extraPlayPos);														
@@ -3258,8 +3264,11 @@ struct SickoLooper1Exp : Module {
 				}
 
 				//if (extraRecPos >= 0) {	// extraRecPos is unsigned. this condition means nothing
+				if (extraRecPos < trackBuffer[LEFT].size()) {
 					trackBuffer[LEFT][extraRecPos] += inputValue[LEFT] * recFadeValue;
 					trackBuffer[RIGHT][extraRecPos] += inputValue[RIGHT] * recFadeValue;
+				} else printf("3: bounds\n");
+
 				//}
 				/*
 				if (samplePos > 0) {
@@ -3273,15 +3282,26 @@ struct SickoLooper1Exp : Module {
 					extraRecPos -= sampleCoeff;
 				*/
 				if (extraRecDirection == FORWARD) {
-					if (samplePos > 0) {
-						trackBuffer[LEFT][extraRecPos-1] = (trackBuffer[LEFT][extraRecPos-2] + trackBuffer[LEFT][extraRecPos]) / 2;
-						trackBuffer[RIGHT][extraRecPos-1] = (trackBuffer[RIGHT][extraRecPos-2] + trackBuffer[RIGHT][extraRecPos]) / 2;
+					if (samplePos > 0 && extraRecPos >= 2) {
+						if (extraRecPos < trackBuffer[LEFT].size() && extraRecPos >= 2) {
+							trackBuffer[LEFT][extraRecPos-1] = (trackBuffer[LEFT][extraRecPos-2] + trackBuffer[LEFT][extraRecPos]) / 2;
+							trackBuffer[RIGHT][extraRecPos-1] = (trackBuffer[RIGHT][extraRecPos-2] + trackBuffer[RIGHT][extraRecPos]) / 2;
+						} else {
+							printf("2: bounds\n");
+						}
 					}
 					extraRecPos += sampleCoeff;
 				} else {
-					trackBuffer[LEFT][extraRecPos+1] = (trackBuffer[LEFT][extraRecPos+2] + trackBuffer[LEFT][extraRecPos]) / 2;
-					trackBuffer[RIGHT][extraRecPos+1] = (trackBuffer[RIGHT][extraRecPos+2] + trackBuffer[RIGHT][extraRecPos]) / 2;
-					extraRecPos -= sampleCoeff;
+					if ((extraRecPos+2) < trackBuffer[LEFT].size()) {
+					  trackBuffer[LEFT][extraRecPos+1] = (trackBuffer[LEFT][extraRecPos+2] + trackBuffer[LEFT][extraRecPos]) / 2;
+					  trackBuffer[RIGHT][extraRecPos+1] = (trackBuffer[RIGHT][extraRecPos+2] + trackBuffer[RIGHT][extraRecPos]) / 2;
+					} else {
+						printf("1: bounds\n");
+					}
+					if (extraRecPos >= sampleCoeff)
+					  extraRecPos -= sampleCoeff;
+					else 
+					  printf("extraRecPos too small: %llu, cannot subtract sampleCoeff \n", extraRecPos);
 				}
 			}
 		}
