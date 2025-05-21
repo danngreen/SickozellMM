@@ -11,7 +11,7 @@
 
 #include "plugin.hpp"
 
-struct Toggler : Module {
+struct SickoToggler : Module {
 	enum ParamId {
 		MODE_SWITCH,
 		ATTACK_PARAM,
@@ -67,7 +67,7 @@ struct Toggler : Module {
 	const float maxAdsrTime = 10.f;*/
 	const float noEnvTime = 0.00101;
 	
-	Toggler() {
+	SickoToggler() {
 		config(PARAMS_LEN, INPUTS_LEN, OUTPUTS_LEN, LIGHTS_LEN);
 		configSwitch(MODE_SWITCH, 0.f, 1.f, 1.f, "Mode", {"Gate", "Toggle"});
 		//configParam(ATTACK_PARAM, 0.f, 1.f, 0.f, "Attack", " ms", maxStageTime / minStageTime, minStageTime);
@@ -285,7 +285,7 @@ struct Toggler : Module {
 
 
 struct TogglerWidget : ModuleWidget {
-	TogglerWidget(Toggler* module) {
+	TogglerWidget(SickoToggler* module) {
 		setModule(module);
 		setPanel(createPanel(asset::plugin(pluginInstance, "res/Toggler.svg")));
 
@@ -294,39 +294,39 @@ struct TogglerWidget : ModuleWidget {
 		addChild(createWidget<SickoScrewBlack2>(Vec(0, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(createWidget<SickoScrewBlack1>(Vec(box.size.x - RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(createParamCentered<CKSS>(mm2px(Vec(21.458, 15.75)), module, Toggler::MODE_SWITCH));
+		addParam(createParamCentered<CKSS>(mm2px(Vec(21.458, 15.75)), module, SickoToggler::MODE_SWITCH));
 
-		addInput(createInputCentered<SickoInPort>(mm2px(Vec(12.5, 38.5)), module, Toggler::TRIG_INPUT));
-		addInput(createInputCentered<SickoInPort>(mm2px(Vec(33, 38.5)), module, Toggler::RST_INPUT));
+		addInput(createInputCentered<SickoInPort>(mm2px(Vec(12.5, 38.5)), module, SickoToggler::TRIG_INPUT));
+		addInput(createInputCentered<SickoInPort>(mm2px(Vec(33, 38.5)), module, SickoToggler::RST_INPUT));
 
-		addParam(createParamCentered<SickoKnob>(mm2px(Vec(8.48, 60)), module, Toggler::ATTACK_PARAM));
-		addParam(createParamCentered<SickoTrimpot>(mm2px(Vec(8.48, 71.5)), module, Toggler::ATTACKATNV_PARAM));
-		addInput(createInputCentered<SickoInPort>(mm2px(Vec(8.48, 80.5)), module, Toggler::ATTACK_INPUT));
+		addParam(createParamCentered<SickoKnob>(mm2px(Vec(8.48, 60)), module, SickoToggler::ATTACK_PARAM));
+		addParam(createParamCentered<SickoTrimpot>(mm2px(Vec(8.48, 71.5)), module, SickoToggler::ATTACKATNV_PARAM));
+		addInput(createInputCentered<SickoInPort>(mm2px(Vec(8.48, 80.5)), module, SickoToggler::ATTACK_INPUT));
 
-		addParam(createParamCentered<SickoKnob>(mm2px(Vec(22.8, 60)), module, Toggler::SUSTAIN_PARAM));
-		addParam(createParamCentered<SickoTrimpot>(mm2px(Vec(22.8, 71.5)), module, Toggler::SUSTAINATNV_PARAM));
-		addInput(createInputCentered<SickoInPort>(mm2px(Vec(22.8, 80.5)), module, Toggler::SUSTAIN_INPUT));
+		addParam(createParamCentered<SickoKnob>(mm2px(Vec(22.8, 60)), module, SickoToggler::SUSTAIN_PARAM));
+		addParam(createParamCentered<SickoTrimpot>(mm2px(Vec(22.8, 71.5)), module, SickoToggler::SUSTAINATNV_PARAM));
+		addInput(createInputCentered<SickoInPort>(mm2px(Vec(22.8, 80.5)), module, SickoToggler::SUSTAIN_INPUT));
 
-		addParam(createParamCentered<SickoKnob>(mm2px(Vec(37.32, 60)), module, Toggler::RELEASE_PARAM));
-		addParam(createParamCentered<SickoTrimpot>(mm2px(Vec(37.32, 71.5)), module, Toggler::RELEASEATNV_PARAM));
-		addInput(createInputCentered<SickoInPort>(mm2px(Vec(37.32, 80.5)), module, Toggler::RELEASE_INPUT));
+		addParam(createParamCentered<SickoKnob>(mm2px(Vec(37.32, 60)), module, SickoToggler::RELEASE_PARAM));
+		addParam(createParamCentered<SickoTrimpot>(mm2px(Vec(37.32, 71.5)), module, SickoToggler::RELEASEATNV_PARAM));
+		addInput(createInputCentered<SickoInPort>(mm2px(Vec(37.32, 80.5)), module, SickoToggler::RELEASE_INPUT));
 
-		addInput(createInputCentered<SickoInPort>(mm2px(Vec(7, 108.8)), module, Toggler::IN_INPUT));
-		addInput(createInputCentered<SickoInPort>(mm2px(Vec(16.5, 108.8)), module, Toggler::IN_INPUT+1));
+		addInput(createInputCentered<SickoInPort>(mm2px(Vec(7, 108.8)), module, SickoToggler::IN_INPUT));
+		addInput(createInputCentered<SickoInPort>(mm2px(Vec(16.5, 108.8)), module, SickoToggler::IN_INPUT+1));
 
-		addOutput(createOutputCentered<SickoOutPort>(mm2px(Vec(29, 103.2)), module, Toggler::OUT_OUTPUT));
-		addOutput(createOutputCentered<SickoOutPort>(mm2px(Vec(39.2, 103.2)), module, Toggler::OUT_OUTPUT+1));
-		addOutput(createOutputCentered<SickoOutPort>(mm2px(Vec(34, 116.5)), module, Toggler::GATE_OUTPUT));
+		addOutput(createOutputCentered<SickoOutPort>(mm2px(Vec(29, 103.2)), module, SickoToggler::OUT_OUTPUT));
+		addOutput(createOutputCentered<SickoOutPort>(mm2px(Vec(39.2, 103.2)), module, SickoToggler::OUT_OUTPUT+1));
+		addOutput(createOutputCentered<SickoOutPort>(mm2px(Vec(34, 116.5)), module, SickoToggler::GATE_OUTPUT));
 
-		addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(41.2, 118.7)), module, Toggler::OUT_LIGHT));
+		addChild(createLightCentered<MediumLight<GreenLight>>(mm2px(Vec(41.2, 118.7)), module, SickoToggler::OUT_LIGHT));
 	}
 
 	void appendContextMenu(Menu* menu) override {
-		Toggler* module = dynamic_cast<Toggler*>(this->module);
+		SickoToggler* module = dynamic_cast<SickoToggler*>(this->module);
 
 		menu->addChild(new MenuSeparator());
 		menu->addChild(createBoolPtrMenuItem("Initialize on Start", "", &module->initStart));
 	}
 };
 
-Model* modelToggler = createModel<Toggler, TogglerWidget>("Toggler");
+Model* modelToggler = createModel<SickoToggler, TogglerWidget>("Toggler");

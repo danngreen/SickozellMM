@@ -71,7 +71,7 @@ extern Model* modelStepSeq8x;
 extern Model* modelSwitcher;
 extern Model* modelSwitcherSt;
 extern Model* modelSwitcher8;
-//extern Model* modelToggler;
+extern Model* modelToggler;
 extern Model* modelTogglerCompact;
 extern Model* modelTrigSeq;
 extern Model* modelTrigSeqPlus;
